@@ -31,7 +31,7 @@ syms R_sph                                                  %radius of the top a
 
 %Total frame density [kg/m^3] (Test).
 % Variable Name: rho_T
-                             
+rho_T = m_frame/
 
 
                           
