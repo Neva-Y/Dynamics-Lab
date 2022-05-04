@@ -34,7 +34,6 @@ syms R_sph                                                  %radius of the top a
 % g = 9.81;
 % m_frame = 0.023;                                            % Mass of frame [kg] (Measured)
 % m_rotor = 0.045;                                            % Mass of rotor [kg] (Measured)
-% 
 % H_rot = 60*10^-3;
 % r_rot = 1.555*10^-3;
 % R_min_rotor = 3.305*10^-3;
@@ -45,31 +44,39 @@ syms R_sph                                                  %radius of the top a
 % R_sph = 2.365*10^-3;
 % R_min_V_tor = 1.715*10^-3
 % R_maj_V_tor = 31.5*10^-3;
-% L = h_rod/2;
+% L = h_rod/2;           
 
-Vol_V_tor = (2*pi*R_maj_V_tor)*(pi*R_min_V_tor^2);
-Vol_H_tor =(2*pi*R_maj_H_tor)*(pi*R_min_H_tor^2);
-Vol_rod_ends = (h_rod-H_rot)*pi*r_rot^2;
+Vol_V_tor = (2*pi*R_maj_V_tor)*(pi*R_min_V_tor^2);                   % Correct      
+Vol_H_tor =(2*pi*R_maj_H_tor)*(pi*R_min_H_tor^2);                    % Correct      
+Vol_rod_ends = (h_rod-H_rot)*pi*r_rot^2;                             % Correct      
 
-rho_T = m_frame/(Vol_V_tor+Vol_H_tor+Vol_rod_ends);                          
-
+rho_T = m_frame/(Vol_V_tor+Vol_H_tor+Vol_rod_ends);                  % Correct              
 
                           
 %%%%%% Rotor %%%%%
 
 % Desity of the rotor [kg/m^3] (Pretest).
 % Variable Name: rho_rotor
-Vol_central_rod = H_rot*pi*r_rot^2;
-Vol_rot_tor = (2*pi*R_maj_rotor)*(pi*R_min_rotor^2); % Assume mass is only on the torus
 
-rho_rotor = m_rotor/(Vol_rot_tor+Vol_central_rod);
+Vol_central_rod = H_rot*pi*r_rot^2;                                                              % Correct      
+Vol_rot_tor = (2*pi*R_maj_rotor)*(pi*R_min_rotor^2); % Assume mass is only on the torus          % Correct      
+
+rho_rotor = m_rotor/(Vol_rot_tor+Vol_central_rod);                                               % Correct      
+
+
+% Central rod considered as a cylinder belonging to the frame
+% Recalculated mass of frame [kg] (Test).
+% Variable Name: m_frame 
+m_frame = m_frame + (Vol_central_rod * rho_rotor);
+
+% Recalculated mass of rotor [kg] (Test).
+m_rot = m_rotor - rho_rotor  *Vol_central_rod;           % TEST IF THIS IS CORRECT
 
 % Central rod considered as a cylinder belonging to the frame
 
 % Recalculated mass of frame [kg] (Test).
 % Variable Name: m_frame 
-m_frame = m_frame + (Vol_central_rod * rho_rotor);      
-   
+             
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Inertia tensor
@@ -77,12 +84,11 @@ m_frame = m_frame + (Vol_central_rod * rho_rotor);
 
 % Inertia tensor of horizontal torus about its center of mass expressed in frame 3 (Pretest). 
 % Variable Name: IGtorH_3
-m_H_tor = rho_T*Vol_H_tor;
+m_H_tor = rho_T*Vol_H_tor;                                                             % Correct      
 
 IGtorH_3 = [m_H_tor/8*(5*R_min_H_tor^2 + 4*R_maj_H_tor^2) 0 0; 
-            0 m_H_tor/8*(5*R_min_H_tor^2 + 4*R_maj_H_tor^2) 0;
+            0 m_H_tor/8*(5*R_min_H_tor^2 + 4*R_maj_H_tor^2) 0;                         % Correct      
             0 0 m_H_tor/4*(4*R_maj_H_tor^2 + 3*R_min_H_tor^2)]
-
 
 % Inertia tensor of vertical torus about its center of mass expressed in frame 3 (Test)
 % Variable Name: IGtorV_3
@@ -92,10 +98,9 @@ IGtorV_3 = [m_V_tor/8*(5*R_min_V_tor^2 + 4*R_maj_V_tor^2) 0 0;
             0 m_V_tor/4*(4*R_maj_V_tor^2 + 3*R_min_V_tor^2) 0;
             0 0 m_V_tor/8*(5*R_min_V_tor^2 + 4*R_maj_V_tor^2)]
 
-
 % Inertia tensor of the rod about its center of mass expressed in frame 3 
 % Variable Name: IGrod_3
-m_rod = rho_T*Vol_rod_ends + rho_rotor*Vol_central_rod;
+m_rod = rho_T*Vol_rod_ends + rho_rotor*Vol_central_rod;         % TEST IF MASSS AT ENDS OF RODS REQUIRED
 
 IGrod_3 = [m_rod/12*h_rod^2 + 1/4*m_rod*r_rot^2 0 0;
            0 m_rod/12*h_rod^2 + 1/4*m_rod*r_rot^2 0;
@@ -107,8 +112,6 @@ IGframe_3 = IGrod_3 + IGtorV_3 + IGtorH_3
 
 % Inertia tensor of rotor about its center of mass in frame 4 
 % Variable Name: IGrotor_4
-m_rot = m_rotor - rho_rotor*Vol_central_rod;      % TEST THIS   
-
 IGrotor_4 = [m_rot/8*(5*R_min_H_tor^2 + 4*R_maj_H_tor^2) 0 0; 
             0 m_rot/8*(5*R_min_H_tor^2 + 4*R_maj_H_tor^2) 0;
             0 0 m_rot/4*(4*R_maj_H_tor^2 + 3*R_min_H_tor^2)]
@@ -116,23 +119,23 @@ IGrotor_4 = [m_rot/8*(5*R_min_H_tor^2 + 4*R_maj_H_tor^2) 0 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Set up rotational matrices
-
-
-%Rotation matrix from frame 4 to frame 0 (Pretest).
-%Variable Name: R04
 R01 = [cos(alpha_) -sin(alpha_) 0;
-       sin(alpha_) cos(alpha_) 0;
+       sin(alpha_) cos(alpha_) 0;               % Correct      
        0 0 1];
 R12 = [1 0 0;
        0 cos(beta_) -sin(beta_);
        0 sin(beta_) cos(beta_)];
-R23 = [cos(gamma_) -sin(gamma_) 0;
+R23 = [cos(gamma_) -sin(gamma_) 0;              % Correct      
        sin(gamma_) cos(gamma_) 0;
        0 0 1];
 R34 = [cos(delta_) -sin(delta_) 0;
-       sin(delta_) cos(delta_) 0;
+       sin(delta_) cos(delta_) 0;               % Correct      
        0 0 1];
-R04 = R01*R12*R23*R34
+%Rotation matrix from frame 4 to frame 0 (Pretest).
+%Variable Name: R04
+R04 = R01*R12*R23*R34                           % Correct      
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Kinematics
 % Centers of mass positions from origin
@@ -140,29 +143,34 @@ R04 = R01*R12*R23*R34
 rOG_0 = [0;0;L]
 
 rOG_3 = inv(R01*R12*R23)*rOG_0
-
 % Center of mass position of the rotor. Variable Name: rOG_4
 rOG_4 = inv(R01*R12*R23*R34)*rOG_0
+
 
 % Absolute Angular velocity of frame 1 represented in frame 1 
 % Variable Name: w1_1
 w1_1 = [0;0;diff(alpha_,t)]
 
+
 % Relative angular velocity of frame 2 relative to 1 represented in frame 2 
 % Variable Name: w21_2
 w21_2 = [diff(beta_,t);0;0]
+
 
 % Relative angular velocity of frame 3 relative to 2 represented in frame 3
 % Variable Name: w32_3
 w32_3 = [0;0;diff(gamma_,t)]
 
+
 % Relative angular velocity of frame 4 relative to 3 represented in frame 4
 % Variable Name: w43_4
 w43_4 = [0;0;diff(delta_,t)]
 
+
 % Absolute angular velocity of frame 3 represented in frame 3 (Test)
 % Variable Name: w3_3
 w3_3 = w32_3 + inv(R23)*w21_2 + inv(R12*R23)*w1_1
+
 
 
 
@@ -178,30 +186,35 @@ w4_4 = w43_4 + inv(R34)*w3_3;
 rOG_4_dot = diff(rOG_4,t) + cross(w4_4, rOG_4);
 rOG_4_dotdot = diff(rOG_4_dot,t) + cross(w4_4, rOG_4_dot)
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Newton-Euler Equation Setup
 % Force due to gravity on the torus in frame zero
 % Variable Name: FGrotor_0
 FGrotor_0 = [0;0;-m_rot*g]
 
+
 % Force due to gravity on the frame in frame zero
 % Variable Name: FGframe_0
 FGframe_0 = [0;0; -m_frame*g]
+
 
 % rotor angular momentum and its time derivative
 % Variable Name: hGrotor_4
 hGrotor_4 = IGrotor_4 * w4_4
 
+
 % Variable Name: hGrotor_4_dot (Test)
 hGrotor_4_dot = diff(hGrotor_4,t) + cross(w4_4, hGrotor_4)
+
 
 % frame angular momentum and its time derivative
 % Variable Name: hGframe_3
 hGframe_3 = IGframe_3 * w3_3
 
+
 % Variable Name: hGframe_3_dot (Test)
 hGframe_3_dot = diff(hGframe_3,t) + cross(w3_3, hGframe_3)
+
 
 %Symbolic variables for reaction Forces and Moments
 syms F_Ox F_Oy F_Oz real
@@ -221,12 +234,13 @@ Mframe_3 = [M_Ox; M_Oy; M_Oz];
 
 %zero equations for the reaction forces/moments that don't exist (Prestest)
 % variable name: zero_reaction
-zero_reaction = [M_Gz; M_Ox; M_Oy; M_Oz] == 0
+zero_reaction = [M_Gz; M_Ox; M_Oy; M_Oz] == 0                           % Correct      
+
 
 %Linear NE Equations for the Rotor (Pretest)
 % variable name: lin_NE_rotor
-lin_NE_rotor = Frotor_4 == -inv(R04)*FGrotor_0
-
+lin_NE_rotor = Frotor_4  ==  m_rot*rOG_4_dotdot - inv(R04)*FGrotor_0
+Frotor_4
 % %Linear NE Equations for the Frame (Test)
 % variable name: lin_NE_frame
 
@@ -250,10 +264,3 @@ lin_NE_rotor = Frotor_4 == -inv(R04)*FGrotor_0
 %equations = [zero_reaction; lin_NE_rotor; lin_NE_frame; ang_NE_rotor; ang_NE_frame];
 
 equations = zeros(4,1);
-
-
-
-
-
-
-
