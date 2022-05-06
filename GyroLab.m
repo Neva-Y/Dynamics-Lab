@@ -252,16 +252,15 @@ ang_NE_rotor = Mrotor_4 == hGrotor_4_dot;
 % variable name: ang_NE_frame
 
 % Have to calculate moment at point O not G, since it is PRM
-IOframe_3 = IGframe_3 + m_frame*[L^2 0 0; 
-                                 0 L^2 0;
-                                 0 0 0];
-
-hOframe_3 = IOframe_3 * w3_3;              
-hOframe_3_dot = diff(hOframe_3, t) + cross(w3_3, hOframe_3);    
-ang_NE_frame = Mframe_3 == R34*Mrotor_4 + hOframe_3_dot - cross(rOG_3, R34*Frotor_4);
-
-% This is calculating the reaction moments about point G 
-%ang_NE_frame = Mframe_3 == R34*Mrotor_4 + hGframe_3_dot + cross(rOG_3, Fframe_3);
+% IOframe_3 = IGframe_3 + m_frame*[L^2 0 0; 
+%                                  0 L^2 0;
+%                                  0 0 0];
+% 
+% hOframe_3 = IOframe_3 * w3_3;              
+% hOframe_3_dot = diff(hOframe_3, t) + cross(w3_3, hOframe_3);    
+% ang_NE_frame = Mframe_3 == R34*Mrotor_4 + hOframe_3_dot - cross(rOG_3, R34*Frotor_4);
+rGO_3 = -rOG_3;
+ang_NE_frame = Mframe_3 == R34*Mrotor_4 + hGframe_3_dot - cross(rGO_3, Fframe_3);
 
 % By this point, we have 16 unknown.
 % Make sure you have 16 equation in symbolic variable equations. From top to bottom
