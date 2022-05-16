@@ -45,8 +45,8 @@ surf(x_rod,y_rod,z_rod)
 z_rotor = z_rotor * R_min_rotor;
 z_rotor = z_rotor - R_min_rotor/2 + L;
 surf(x_rotor,y_rotor,z_rotor)
-h2 = fill3(x_rotor(1,:),y_rotor(1,:),z_rotor(1,:), 'b');
-h3 = fill3(x_rotor(2,:),y_rotor(2,:),z_rotor(2,:),'b');
+fill3(x_rotor(1,:),y_rotor(1,:),z_rotor(1,:), 'b');
+fill3(x_rotor(2,:),y_rotor(2,:),z_rotor(2,:),'b');
 
 [x_T_sph,y_T_sph,z_T_sph] = sphere;
 x_T_sph = x_T_sph* R_shp;
