@@ -270,7 +270,12 @@ ang_NE_frame = [M_Ox == ((2*R_maj_H_tor*R_min_H_tor^2*m_frame*pi^2*(R_maj_H_tor^
 % Remove comment of the next line once you have all the above equations and delete the last line with the zeros
 equations = [zero_reaction; lin_NE_rotor; lin_NE_frame; ang_NE_rotor; ang_NE_frame];
 
+eqs = [subs(ang_NE_rotor(3), M_Gz, 0); subs(ang_NE_frame, [M_Oz, M_Ox, M_Oy], [0,0,0])]
 
+%%
+syms alpha_d(t) alpha_dd(t) delta_d(t) delta_dd(t) beta_d(t) beta_dd(t) gamma_d(t) gamma_dd(t)
+eqs = subs(eqs, [diff(alpha_,t,t), diff(beta_,t,t), diff(gamma_,t,t), diff(delta_,t,t)], [alpha_dd beta_dd delta_dd gamma_dd])
+[a,b] = equationsToMatrix(eqs, [alpha_dd beta_dd delta_dd gamma_dd])
 
 function xdot = eom(t,x)
 
