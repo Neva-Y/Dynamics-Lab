@@ -152,7 +152,7 @@
         
         axis square
         view(3)
-        axis(1*[-0.6 1 -0.6 1 -0.6 1]*0.09)
+        axis([-0.055 0.055 -0.055 0.055 -0.015 0.095])
         xlabel('X')
         ylabel('Y')
         zlabel('Z')

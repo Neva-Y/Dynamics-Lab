@@ -35,7 +35,6 @@ R_maj_rotor = 28*10^-3;
 h_rod = 88*10^-3;
 R_min_H_tor = 1.155*10^-3;
 R_maj_H_tor = 36*10^-3;
-R_sph = 2.365*10^-3;
 R_min_V_tor = 1.715*10^-3;
 R_maj_V_tor = 31.5*10^-3;
 L = h_rod/2; 
@@ -140,16 +139,18 @@ surf(x_B_sph,y_B_sph,z_B_sph);
         %Sphere_Bottom
         [x_B_sph_rotated,y_B_sph_rotated,z_B_sph_rotated] = rotation(x_B_sph,y_B_sph,z_B_sph,R02);
         
-        surf(x_V_tor_rotated,y_V_tor_rotated,z_V_tor_rotated,x_V_tor, 'EdgeColor','none')
-        surf(x_H_tor_rotated,y_H_tor_rotated,z_H_tor_rotated,x_H_tor, 'EdgeColor','none')
-        surf(x_rotor_rotated,y_rotor_rotated,z_rotor_rotated,x_rotor, 'EdgeColor','none')
-        surf(x_rod_rotated,y_rod_rotated,z_rod_rotated,x_rod, 'EdgeColor','none')
-        surf(x_T_sph_rotated,y_T_sph_rotated,z_T_sph_rotated,x_T_sph, 'EdgeColor','none')
-        surf(x_B_sph_rotated,y_B_sph_rotated,z_B_sph_rotated,x_B_sph, 'EdgeColor','none')
+        surf(x_V_tor_rotated,y_V_tor_rotated,z_V_tor_rotated,x_V_tor, 'EdgeColor','k')
+        surf(x_H_tor_rotated,y_H_tor_rotated,z_H_tor_rotated,x_H_tor, 'EdgeColor','k')
+        surf(x_rotor_rotated,y_rotor_rotated,z_rotor_rotated,x_rotor)
+        surf(x_rod_rotated,y_rod_rotated,z_rod_rotated,x_rod, 'EdgeColor','k')
+        surf(x_T_sph_rotated,y_T_sph_rotated,z_T_sph_rotated,x_T_sph, 'EdgeColor','k')
+        surf(x_B_sph_rotated,y_B_sph_rotated,z_B_sph_rotated,x_B_sph, 'EdgeColor','k')
+        fill3(x_rotor_rotated(1,:),y_rotor_rotated(1,:),z_rotor_rotated(1,:), 'b');
+        fill3(x_rotor_rotated(2,:),y_rotor_rotated(2,:),z_rotor_rotated(2,:),'b');
         
         axis square
         view(2)
-        axis(1*[-1 1 -1 1 -1 1]*0.08)
+        axis([-0.055 0.055 -0.055 0.055 -0.015 0.095])
         xlabel('X')
         ylabel('Y')
         zlabel('Z')
