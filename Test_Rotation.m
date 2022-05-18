@@ -141,16 +141,18 @@
         %Sphere_Bottom
         [x_B_sph_rotated,y_B_sph_rotated,z_B_sph_rotated] = rotation(x_B_sph,y_B_sph,z_B_sph,R02);
         
-        surf(x_V_tor_rotated,y_V_tor_rotated,z_V_tor_rotated,x_V_tor)%'EdgeColor','none'
+        surf(x_V_tor_rotated,y_V_tor_rotated,z_V_tor_rotated,x_V_tor)
         surf(x_H_tor_rotated,y_H_tor_rotated,z_H_tor_rotated,x_H_tor)
         surf(x_rotor_rotated,y_rotor_rotated,z_rotor_rotated,x_rotor)
         surf(x_rod_rotated,y_rod_rotated,z_rod_rotated,x_rod)
         surf(x_T_sph_rotated,y_T_sph_rotated,z_T_sph_rotated,x_T_sph)
         surf(x_B_sph_rotated,y_B_sph_rotated,z_B_sph_rotated,x_B_sph)
+        fill3(x_rotor_rotated(1,:),y_rotor_rotated(1,:),z_rotor_rotated(1,:), 'b');
+        fill3(x_rotor_rotated(2,:),y_rotor_rotated(2,:),z_rotor_rotated(2,:),'b');
         
         axis square
         view(3)
-        axis(1*[-0.6 1 -0.6 1 -0.6 1]*0.9)
+        axis(1*[-0.6 1 -0.6 1 -0.6 1]*0.09)
         xlabel('X')
         ylabel('Y')
         zlabel('Z')
